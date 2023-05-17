@@ -32,3 +32,4 @@ https://duncanlew.medium.com/build-a-node-js-server-with-fastify-and-typescript-
 https://www.fastify.io/docs/latest/Guides/Getting-Started/
 https://www.fastify.io/ecosystem/
 https://www.youtube.com/watch?v=LMoMHP44-xM
+https://github.com/TomDoesTech/fastify-prisma-rest-api/blob/main/NOTES.md
