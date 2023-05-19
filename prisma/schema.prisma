@@ -14,13 +14,17 @@ model Profile {
   id Int      @id @default(autoincrement())
   firstname String 
   lastname String 
-  job_title String @default("")
+  job_title String @default("N/A")
   years_of_experience Int?
+  email String? @unique 
+  phone_number String? //maybe int
   competences Competence[] 
   certs Cert[]
   diplomas Diploma[]
   projects Project[]
-  // languages String[]
+  languages Language[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // references Reference[]
 }
 
@@ -28,45 +32,55 @@ model Competence {
   id Int      @id @default(autoincrement())
   name String
   tools_list Tool[]
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [id])
+  profile Profile[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Language {
+  id Int      @id @default(autoincrement())
+  name String
+  profile Profile[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Tool {
   id Int      @id @default(autoincrement())
   name String
-  competence   Competence @relation(fields: [competenceId], references: [id])
-  competenceId Int
-  project   Project @relation(fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  projectId Int
+  competence   Competence[]
+  project   Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 
 model Cert {
   id Int      @id @default(autoincrement())
   name String
-  completion_year DateTime 
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [id])
+  completion_year DateTime?
+  profile Profile[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Diploma {
-  id Int      @id @default(autoincrement())
-  graduation_year DateTime
+  id Int      @id @default(autoincrement()) 
   name String
-  source String
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [id])
+  source String?
+  graduation_year DateTime?
+  profile Profile[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-
-//n-n relationship
 model Project {
   id Int      @id @default(autoincrement())
   name String
   tools_list Tool[]
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [id])
+  profile Profile[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 

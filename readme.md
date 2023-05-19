@@ -37,3 +37,6 @@ https://github.com/TomDoesTech/fastify-prisma-rest-api/blob/main/NOTES.md
 
 # install 
 npm i -D pino-pretty
+
+npx prisma migrate dev 
+npx prisma studio
