@@ -7,6 +7,7 @@ import { Profile } from "./types";
 
 import bootcampRoutes from "./modules/bootcamps";
 import certRoutes from "./modules/certs";
+import competenceRoutes from "./modules/competences";
 import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
 import languageRoutes from "./modules/language";
 import profileRoutes from "./modules/profiles/profiles.controller";
@@ -111,8 +112,13 @@ async function main() {
     fastify.register(profileRoutes, {
         prefix: "api/profiles",
     });
+
     fastify.register(projectRoutes, {
         prefix: "api/projects",
+    });
+
+    fastify.register(competenceRoutes, {
+        prefix: "api/competences",
     });
 
     //? listen to port 8000
