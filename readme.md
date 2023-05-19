@@ -48,4 +48,6 @@ https://github.com/TomDoesTech/fastify-prisma-rest-api/blob/main/NOTES.md
 * To Open Prisma Studion and inspect Tables
   - npx prisma studio
 
+* To generate new types
+  * npx prisma generate
 

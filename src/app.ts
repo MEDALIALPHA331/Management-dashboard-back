@@ -1,10 +1,13 @@
 import cors from "@fastify/cors";
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+
 import puppeteer from "puppeteer";
-import certRoutes from "./modules/certs";
-import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
 import { getTemplateOne } from "./pdf/templates";
 import { Profile } from "./types";
+
+import bootcampRoutes from "./modules/bootcamps";
+import certRoutes from "./modules/certs";
+import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
 
 //? env logger
 const envToLogger = {
@@ -80,9 +83,16 @@ async function main() {
     for (const schema of diplomaSchemas) {
         fastify.addSchema(schema);
     }
+    // for (const schema of bootcampSchemas) {
+    //     fastify.addSchema(schema);
+    // }
 
     fastify.register(diplomaRoutes, {
         prefix: "api/diplomas",
+    });
+
+    fastify.register(bootcampRoutes, {
+        prefix: "api/bootcamps",
     });
 
     fastify.register(certRoutes, {

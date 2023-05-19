@@ -4,20 +4,17 @@ import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 import prisma from "../utils/prisma";
 
-//* diplomas.route: api/diplomas
+//* bootcamp.route: api/bootcamps
 export default async function bootcampRoutes(server: FastifyInstance) {
     server.get("/", getAllBootcampsHandler);
     server.get("/:bootcampId", getOneBootcampHandler);
     server.post(
         "/",
-        {
-            schema: {
-                body: $ref("createDiplomaSchema"),
-                response: {
-                    201: $ref("createDiplomaResponseSchema"),
-                },
-            },
-        },
+        // {
+        //     schema: {
+        //         body: $ref("createBootcampSchemas"),
+        //     },
+        // },
         registerBootcampHandler
     );
     server.delete("/:bootcampId", deleteOneBootcampHandler);
@@ -27,10 +24,10 @@ export default async function bootcampRoutes(server: FastifyInstance) {
 
 /* -------------------------- */
 
-//* diploma.controller
+//* bootcamp.controller
 async function registerBootcampHandler(
     request: FastifyRequest<{
-        Body: createDiplomaInput;
+        Body: createBootcampInput;
     }>,
     reply: FastifyReply
 ) {
@@ -89,7 +86,9 @@ async function deleteOneBootcampHandler(
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
-                reply.code(404).send(`Bootcamp with id ${bootcampId} Not Found`);
+                reply
+                    .code(404)
+                    .send(`Bootcamp with id ${bootcampId} Not Found`);
             }
         }
         reply.code(500).send(e);
@@ -109,14 +108,17 @@ async function deleteAllBootcampsHandler(
 }
 
 async function updateBootcampHandler(
-    request: FastifyRequest<{ Body: createDiplomaInput }>,
+    request: FastifyRequest<{ Body: createBootcampInput }>,
     reply: FastifyReply
 ) {
     const body = request.body;
-    const {  bootcampId } = request.params as { bootcampId: string };
+    const { bootcampId } = request.params as { bootcampId: string };
 
     try {
-        const updatedDiploma = await updateBootcampById(Number(bootcampId), body);
+        const updatedDiploma = await updateBootcampById(
+            Number(bootcampId),
+            body
+        );
 
         reply.code(200).send(updatedDiploma);
     } catch (e) {
@@ -131,87 +133,74 @@ async function updateBootcampHandler(
 }
 
 /* -------------------------- */
-//* diploma.service
-async function createBootcamp(input: createDiplomaInput) {
-    const diploma = await prisma.diploma.create({
+//* bootcamp.service
+async function createBootcamp(input: createBootcampInput) {
+    const bootcamp = await prisma.bootcamp.create({
         data: input,
     });
 
-    return diploma;
+    return bootcamp;
 }
 
 async function getAllBootcamps() {
-    const diplomas = await prisma.diploma.findMany();
+    const bootcamps = await prisma.bootcamp.findMany();
 
-    return diplomas;
+    return bootcamps;
 }
 
 async function getBootcampById(id: number) {
-    const diploma = prisma.diploma.findUnique({
+    const bootcamp = prisma.bootcamp.findUnique({
         where: {
             id,
         },
     });
 
-    return diploma;
+    return bootcamp;
 }
 
 async function deleteBootcampById(id: number) {
-    const deletedDiploma = await prisma.diploma.delete({
+    const deletedBootcamp = await prisma.bootcamp.delete({
         where: {
             id,
         },
     });
 
-    return deletedDiploma;
+    return deletedBootcamp;
 }
 
 async function deleteAllBootcamps() {
     //* batch
-    const allDeletedDiplomas = await prisma.diploma.deleteMany();
+    const allDeletedBootcamps = await prisma.bootcamp.deleteMany();
     return;
 }
 
-async function updateBootcampById(id: number, input: createDiplomaInput) {
-    const updatedDiploma = await prisma.diploma.update({
+async function updateBootcampById(id: number, input: createBootcampInput) {
+    const updatedBootcamp = await prisma.bootcamp.update({
         data: input,
         where: {
             id,
         },
     });
 
-    return updatedDiploma;
+    return updatedBootcamp;
 }
 
 /* -------------------------- */
 
-//* diploma.schema
-const coreDiplomaSchema = {
+//* bootcamp.schema
+const createBootcampSchemas = z.object({
     name: z
         .string({
-            required_error: "libellé de diplome est obligatoire",
+            required_error: "libellé de formation est obligatoire",
             invalid_type_error: "libellé est de type chaine de charactére",
         })
         .min(4)
         .max(32),
     source: z.string().optional().nullable(),
-};
-
-const createDiplomaSchema = z.object({
-    ...coreDiplomaSchema,
-    graduation_year: z.date().optional().nullable(),
 });
 
-//TODO: Bring it back later (the graduation year)
-//? For Response objects, omiting graduation_year from response
-const createDiplomaResponseSchema = z.object({
-    id: z.number(),
-    ...coreDiplomaSchema,
+export const { schemas: bootcampSchemas, $ref } = buildJsonSchemas({
+    createBootcampSchemas,
 });
 
-export const { schemas: diplomaSchemas, $ref } = buildJsonSchemas({
-    createDiplomaSchema,
-    createDiplomaResponseSchema,
-});
-
-type createDiplomaInput = z.infer<typeof createDiplomaSchema>;
+type createBootcampInput = z.infer<typeof createBootcampSchemas>;

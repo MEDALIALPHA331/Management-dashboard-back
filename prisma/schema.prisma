@@ -21,6 +21,7 @@ model Profile {
   competences Competence[] 
   certs Cert[]
   diplomas Diploma[]
+  bootcamps Bootcamp[]
   projects Project[]
   languages Language[]
   createdAt DateTime @default(now())
@@ -73,6 +74,17 @@ model Diploma {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Bootcamp {
+  id Int      @id @default(autoincrement()) 
+  name String
+  source String?
+  // date DateTime?
+  profile Profile[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 
 model Project {
   id Int      @id @default(autoincrement())
