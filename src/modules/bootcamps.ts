@@ -5,9 +5,9 @@ import { z } from "zod";
 import prisma from "../utils/prisma";
 
 //* diplomas.route: api/diplomas
-export default async function diplomaRoutes(server: FastifyInstance) {
-    server.get("/", getAllDiplomasHandler);
-    server.get("/:diplomaId", getOneDiplomaHandler);
+export default async function bootcampRoutes(server: FastifyInstance) {
+    server.get("/", getAllBootcampsHandler);
+    server.get("/:bootcampId", getOneBootcampHandler);
     server.post(
         "/",
         {
@@ -18,17 +18,17 @@ export default async function diplomaRoutes(server: FastifyInstance) {
                 },
             },
         },
-        registerDiplomaHandler
+        registerBootcampHandler
     );
-    server.delete("/:diplomaId", deleteOneDiplomaHandler);
-    server.delete("/", deleteAllDiplomasHandler); //! danger
-    server.put("/:diplomaId", updateDiplomaHandler);
+    server.delete("/:bootcampId", deleteOneBootcampHandler);
+    server.delete("/", deleteAllBootcampsHandler); //! danger
+    server.put("/:bootcampId", updateBootcampHandler);
 }
 
 /* -------------------------- */
 
 //* diploma.controller
-async function registerDiplomaHandler(
+async function registerBootcampHandler(
     request: FastifyRequest<{
         Body: createDiplomaInput;
     }>,
@@ -37,91 +37,92 @@ async function registerDiplomaHandler(
     const body = request.body;
 
     try {
-        const diploma = await createDiploma(body);
-        return reply.code(201).send(diploma);
+        const bootcamp = await createBootcamp(body);
+        return reply.code(201).send(bootcamp);
     } catch (e) {
         console.error(e);
         return reply.code(500).send(e);
     }
 }
 
-async function getAllDiplomasHandler(
+async function getAllBootcampsHandler(
     _request: FastifyRequest,
     reply: FastifyReply
 ) {
     try {
-        const diplomas = await getAllDiplomas();
-        return reply.code(200).send(diplomas);
+        const bootcamps = await getAllBootcamps();
+        return reply.code(200).send(bootcamps);
     } catch (e) {
         console.error(e);
         return reply.code(500).send(e);
     }
 }
 
-async function getOneDiplomaHandler(
+async function getOneBootcampHandler(
     request: FastifyRequest,
     reply: FastifyReply
 ) {
-    const { diplomaId } = request.params as { diplomaId: string };
+    const { bootcampId } = request.params as { bootcampId: string };
 
     try {
-        const diploma = await getDiplomaById(Number(diplomaId));
-        if (diploma) {
-            reply.code(200).send(diploma);
+        const bootcamp = await getBootcampById(Number(bootcampId));
+
+        if (bootcamp) {
+            reply.code(200).send(bootcamp);
         } else {
-            reply.code(404).send(`DIPLOMA WITH ID ${diplomaId} NOT FOUND`);
+            reply.code(404).send(`Bootcamp WITH ID ${bootcampId} NOT FOUND`);
         }
     } catch (e) {
         reply.code(500).send(e);
     }
 }
 
-async function deleteOneDiplomaHandler(
+async function deleteOneBootcampHandler(
     request: FastifyRequest,
     reply: FastifyReply
 ) {
-    const { diplomaId } = request.params as { diplomaId: string };
+    const { bootcampId } = request.params as { bootcampId: string };
 
     try {
-        const deletedDiploma = await deleteDiplomaById(Number(diplomaId));
-        reply.code(204).send(deletedDiploma);
+        const deletedBootcamp = await deleteBootcampById(Number(bootcampId));
+        reply.code(204).send(deletedBootcamp);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
-                reply.code(404).send(`Diploma with id ${diplomaId} Not Found`);
+                reply.code(404).send(`Bootcamp with id ${bootcampId} Not Found`);
             }
         }
         reply.code(500).send(e);
     }
 }
 
-async function deleteAllDiplomasHandler(
+async function deleteAllBootcampsHandler(
     _request: FastifyRequest,
     reply: FastifyReply
 ) {
     try {
-        await deleteAllDiplomas();
-        reply.code(200).send("All Diplomas are Deleted");
+        await deleteAllBootcamps();
+        reply.code(200).send("Tous Formations sont supprimer");
     } catch (e) {
         reply.code(500).send(e);
     }
 }
 
-async function updateDiplomaHandler(
+async function updateBootcampHandler(
     request: FastifyRequest<{ Body: createDiplomaInput }>,
     reply: FastifyReply
 ) {
     const body = request.body;
-    const { diplomaId } = request.params as { diplomaId: string };
+    const {  bootcampId } = request.params as { bootcampId: string };
 
     try {
-        const updatedDiploma = await updateDiplomaById(Number(diplomaId), body);
+        const updatedDiploma = await updateBootcampById(Number(bootcampId), body);
 
         reply.code(200).send(updatedDiploma);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
-                reply.code(404).send(`Diploma with id ${diplomaId} Not Found`);
+                reply.code(404).send(`Diploma with id ${bootcampId} Not Found`);
             }
         } else {
             reply.code(500).send(e);
@@ -131,7 +132,7 @@ async function updateDiplomaHandler(
 
 /* -------------------------- */
 //* diploma.service
-async function createDiploma(input: createDiplomaInput) {
+async function createBootcamp(input: createDiplomaInput) {
     const diploma = await prisma.diploma.create({
         data: input,
     });
@@ -139,13 +140,13 @@ async function createDiploma(input: createDiplomaInput) {
     return diploma;
 }
 
-async function getAllDiplomas() {
+async function getAllBootcamps() {
     const diplomas = await prisma.diploma.findMany();
 
     return diplomas;
 }
 
-async function getDiplomaById(id: number) {
+async function getBootcampById(id: number) {
     const diploma = prisma.diploma.findUnique({
         where: {
             id,
@@ -155,7 +156,7 @@ async function getDiplomaById(id: number) {
     return diploma;
 }
 
-async function deleteDiplomaById(id: number) {
+async function deleteBootcampById(id: number) {
     const deletedDiploma = await prisma.diploma.delete({
         where: {
             id,
@@ -165,13 +166,13 @@ async function deleteDiplomaById(id: number) {
     return deletedDiploma;
 }
 
-async function deleteAllDiplomas() {
+async function deleteAllBootcamps() {
     //* batch
     const allDeletedDiplomas = await prisma.diploma.deleteMany();
     return;
 }
 
-async function updateDiplomaById(id: number, input: createDiplomaInput) {
+async function updateBootcampById(id: number, input: createDiplomaInput) {
     const updatedDiploma = await prisma.diploma.update({
         data: input,
         where: {

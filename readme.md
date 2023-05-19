@@ -23,6 +23,9 @@ https://www.prisma.io/docs/concepts/database-connectors/sql-server/sql-server-do
 https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-cmd#connect-to-sql-server
 https://github.com/prisma/prisma/discussions/5817
 
+* m-m relationship 
+  * https://www.prisma.io/docs/guides/other/troubleshooting-orm/help-articles/working-with-many-to-many-relations
+
 
 
 # Additional Resources on Fastify

@@ -1,7 +1,8 @@
 import cors from "@fastify/cors";
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import puppeteer from "puppeteer";
-import diplomaRoutes from "./modules/diplomas";
+import certRoutes from "./modules/certs";
+import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
 import { getTemplateOne } from "./pdf/templates";
 import { Profile } from "./types";
 
@@ -21,21 +22,22 @@ const fastify = Fastify({
     logger: envToLogger["development"] ?? true,
 });
 
-//TODO: change cors config
+//TODO: change cors config in Prod
 fastify.register(cors, {
     origin: "*",
     methods: ["POST"],
 });
 
+//? A Public Endpoint
 fastify.get("/", {
-    handler: async (request: FastifyRequest, reply: FastifyReply) => {
+    handler: async (_request: FastifyRequest, reply: FastifyReply) => {
         return reply.code(200).send("hello");
     },
 });
 
 //? Health Check
 fastify.get("/health_check", {
-    handler: async (request: FastifyRequest, reply: FastifyReply) => {
+    handler: async (_request: FastifyRequest, reply: FastifyReply) => {
         return reply
             .code(200)
             .header("Content-Type", "application/json")
@@ -74,10 +76,20 @@ fastify.post("/generate_cv", {
 
 //? configure server
 async function main() {
+    //* Should be before regestering Routes
+    for (const schema of diplomaSchemas) {
+        fastify.addSchema(schema);
+    }
+
     fastify.register(diplomaRoutes, {
         prefix: "api/diplomas",
     });
 
+    fastify.register(certRoutes, {
+        prefix: "api/certs",
+    });
+
+    //? listen to port 8000
     try {
         await fastify.listen({
             port: 8000,

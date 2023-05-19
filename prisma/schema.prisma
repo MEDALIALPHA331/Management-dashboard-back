@@ -59,7 +59,7 @@ model Cert {
   id Int      @id @default(autoincrement())
   name String
   completion_year DateTime?
-  profile Profile[]
+  profile Profile[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
