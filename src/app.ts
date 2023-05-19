@@ -8,6 +8,7 @@ import { Profile } from "./types";
 import bootcampRoutes from "./modules/bootcamps";
 import certRoutes from "./modules/certs";
 import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
+import languageRoutes from "./modules/language";
 
 //? env logger
 const envToLogger = {
@@ -31,7 +32,7 @@ fastify.register(cors, {
     methods: ["POST"],
 });
 
-//? A Public Endpoint
+//? dunno
 fastify.get("/", {
     handler: async (_request: FastifyRequest, reply: FastifyReply) => {
         return reply.code(200).send("hello");
@@ -93,6 +94,10 @@ async function main() {
 
     fastify.register(bootcampRoutes, {
         prefix: "api/bootcamps",
+    });
+
+    fastify.register(languageRoutes, {
+        prefix: "api/languages",
     });
 
     fastify.register(certRoutes, {
