@@ -1,7 +1,7 @@
 {
     "dependencies": {
         "@fastify/cors": "^8.2.1",
-        "@prisma/client": "^4.14.0",
+        "@prisma/client": "^4.14.1",
         "fastify": "^4.17.0",
         "fastify-jwt": "^4.2.0",
         "fastify-swagger": "^5.2.0",

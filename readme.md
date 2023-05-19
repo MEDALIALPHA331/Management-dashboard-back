@@ -25,7 +25,7 @@ https://github.com/prisma/prisma/discussions/5817
 
 
 
-# Additional Resources
+# Additional Resources on Fastify
 https://github.com/TomDoesTech/fastify-prisma-rest-api/blob/main/NOTES.md
 https://www.prisma.io/fastify
 https://duncanlew.medium.com/build-a-node-js-server-with-fastify-and-typescript-a0f7225afddc
@@ -35,8 +35,14 @@ https://www.youtube.com/watch?v=LMoMHP44-xM
 https://github.com/TomDoesTech/fastify-prisma-rest-api/blob/main/NOTES.md
 
 
-# install 
-npm i -D pino-pretty
+## Additional Steps
+* Fastify Logger to prettify dev enviromenet Logging:
+  - npm i -D pino-pretty 
 
-npx prisma migrate dev 
-npx prisma studio
+* To Run additional Migrations 
+  - npx prisma migrate dev --name MigrationName
+  
+* To Open Prisma Studion and inspect Tables
+  - npx prisma studio
+
+

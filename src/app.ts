@@ -1,6 +1,7 @@
 import cors from "@fastify/cors";
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import puppeteer from "puppeteer";
+import diplomaRoutes from "./modules/diplomas";
 import { getTemplateOne } from "./pdf/templates";
 import { Profile } from "./types";
 
@@ -15,10 +16,12 @@ const envToLogger = {
     test: false,
 };
 
+//? app instance
 const fastify = Fastify({
     logger: envToLogger["development"] ?? true,
 });
 
+//TODO: change cors config
 fastify.register(cors, {
     origin: "*",
     methods: ["POST"],
@@ -40,6 +43,7 @@ fastify.get("/health_check", {
     },
 });
 
+//? cv generation endpoint
 fastify.post("/generate_cv", {
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
         const profile = request.body as Profile;
@@ -70,10 +74,18 @@ fastify.post("/generate_cv", {
 
 //? configure server
 async function main() {
-    await fastify.listen({
-        port: 8000,
-        host: "0.0.0.0",
+    fastify.register(diplomaRoutes, {
+        prefix: "api/diplomas",
     });
+
+    try {
+        await fastify.listen({
+            port: 8000,
+            host: "0.0.0.0",
+        });
+    } catch (e) {
+        console.error("Failed to listen to port 8000: ", e);
+    }
 }
 
 //? Gracefull Shutdown
