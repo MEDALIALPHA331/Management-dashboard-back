@@ -9,6 +9,7 @@ import bootcampRoutes from "./modules/bootcamps";
 import certRoutes from "./modules/certs";
 import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
 import languageRoutes from "./modules/language";
+import profileRoutes from "./modules/profiles/profiles.controller";
 
 //? env logger
 const envToLogger = {
@@ -88,6 +89,8 @@ async function main() {
     //     fastify.addSchema(schema);
     // }
 
+    /* Registering api routes */
+
     fastify.register(diplomaRoutes, {
         prefix: "api/diplomas",
     });
@@ -102,6 +105,10 @@ async function main() {
 
     fastify.register(certRoutes, {
         prefix: "api/certs",
+    });
+
+    fastify.register(profileRoutes, {
+        prefix: "api/profiles",
     });
 
     //? listen to port 8000
