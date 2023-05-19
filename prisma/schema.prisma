@@ -55,7 +55,6 @@ model Tool {
   updatedAt DateTime @updatedAt
 }
 
-
 model Cert {
   id Int      @id @default(autoincrement())
   name String

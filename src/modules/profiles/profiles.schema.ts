@@ -7,13 +7,15 @@ export const createProfileSchema = z.object({
     years_of_experience: z.number().positive().max(60),
     job_title: z.string(), //dunno bout dat
     phone_number: z.string().optional().nullable(),
-    competences: z.array(
-        z.object({
-            name: z.string().min(4).max(32),
-            //   tools_list Tool[]
-            //   profile Profile[]
-        })
-    ),
+    competences: z
+        .array(
+            //TODO: replace it by createCompetenceSchema
+            z.object({
+                name: z.string().min(4).max(32),
+            })
+        )
+        .optional()
+        .nullable(),
 });
 
 export type CreateProfileInput = z.infer<typeof createProfileSchema>;

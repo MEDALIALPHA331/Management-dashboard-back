@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { CreateProfileInput } from "./profiles.schema";
+
 import {
     createProfile,
     deleteProfileById,
@@ -59,7 +60,7 @@ async function getOneProfileHandler(
         if (profile) {
             reply.code(200).send(profile);
         } else {
-            reply.code(404).send(`Bootcamp WITH ID ${profileId} NOT FOUND`);
+            reply.code(404).send(`Profile WITH ID ${profileId} NOT FOUND`);
         }
     } catch (e) {
         reply.code(500).send(e);
@@ -73,12 +74,12 @@ async function deleteOneProfileHandler(
     const { profileId } = request.params as { profileId: string };
 
     try {
-        const deletedBootcamp = await deleteProfileById(Number(profileId));
-        reply.code(204).send(deletedBootcamp);
+        const deletedProfile = await deleteProfileById(Number(profileId));
+        reply.code(204).send(deletedProfile);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
-                reply.code(404).send(`Bootcamp with id ${profileId} Not Found`);
+                reply.code(404).send(`Profile with id ${profileId} Not Found`);
             }
         }
         reply.code(500).send(e);

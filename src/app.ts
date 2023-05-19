@@ -10,6 +10,7 @@ import certRoutes from "./modules/certs";
 import diplomaRoutes, { diplomaSchemas } from "./modules/diplomas";
 import languageRoutes from "./modules/language";
 import profileRoutes from "./modules/profiles/profiles.controller";
+import projectRoutes from "./modules/projects/projects.controller";
 
 //? env logger
 const envToLogger = {
@@ -109,6 +110,9 @@ async function main() {
 
     fastify.register(profileRoutes, {
         prefix: "api/profiles",
+    });
+    fastify.register(projectRoutes, {
+        prefix: "api/projects",
     });
 
     //? listen to port 8000
