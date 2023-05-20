@@ -4,7 +4,7 @@ import { CreateProjectInput } from "./projects.schema";
 export async function createProfile(input: CreateProjectInput) {
     const { profiles, tool_list, ...rest } = input;
 
-    const newProject = prisma.project.create({
+    const newProject = await prisma.project.create({
         data: rest,
     });
 
@@ -15,7 +15,7 @@ export async function createProfile(input: CreateProjectInput) {
 }
 
 export async function getAllProfiles() {
-    return prisma.project.findMany({
+    return await prisma.project.findMany({
         include: {
             tools_list: true,
             profile: true,
@@ -24,7 +24,7 @@ export async function getAllProfiles() {
 }
 
 export async function getProfileById(id: number) {
-    return prisma.project.findFirst({
+    return await prisma.project.findFirst({
         where: {
             id,
         },
@@ -33,7 +33,7 @@ export async function getProfileById(id: number) {
 
 export async function updateProfileById(id: number, input: CreateProjectInput) {
     const { profiles, tool_list, ...rest } = input;
-    return prisma.project.update({
+    return await prisma.project.update({
         data: rest,
         where: {
             id,
@@ -42,7 +42,7 @@ export async function updateProfileById(id: number, input: CreateProjectInput) {
 }
 
 export async function deleteProfileById(id: number) {
-    return prisma.project.delete({
+    return await prisma.project.delete({
         where: {
             id,
         },

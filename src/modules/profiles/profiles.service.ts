@@ -4,7 +4,17 @@ import { CreateProfileInput } from "./profiles.schema";
 export async function createProfile(input: CreateProfileInput) {
     const { competences, ...rest } = input;
 
-    const newProfile = prisma.profile.create({
+    /*
+    const competenceIncluded = competences?.map(async (competence) => {
+         const comp = await prisma.competence.upsert({
+            create: { 
+                name: competence.name,
+            },
+        });
+    });
+    */
+
+    const newProfile = await prisma.profile.create({
         data: rest,
     });
 
@@ -15,7 +25,7 @@ export async function createProfile(input: CreateProfileInput) {
 }
 
 export async function getAllProfiles() {
-    return prisma.profile.findMany({
+    return await prisma.profile.findMany({
         //? whatever
         include: {
             projects: true,
@@ -25,7 +35,7 @@ export async function getAllProfiles() {
 }
 
 export async function getProfileById(id: number) {
-    return prisma.profile.findFirst({
+    return await prisma.profile.findFirst({
         where: {
             id,
         },
@@ -34,7 +44,7 @@ export async function getProfileById(id: number) {
 
 export async function updateProfileById(id: number, input: CreateProfileInput) {
     const { competences, ...rest } = input;
-    return prisma.profile.update({
+    return await prisma.profile.update({
         data: rest,
         where: {
             id,
@@ -43,7 +53,7 @@ export async function updateProfileById(id: number, input: CreateProfileInput) {
 }
 
 export async function deleteProfileById(id: number) {
-    return prisma.profile.delete({
+    return await prisma.profile.delete({
         where: {
             id,
         },
