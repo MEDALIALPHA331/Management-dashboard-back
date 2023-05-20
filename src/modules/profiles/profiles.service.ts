@@ -44,6 +44,7 @@ export async function getProfileById(id: number) {
 
 export async function updateProfileById(id: number, input: CreateProfileInput) {
     const { competences, ...rest } = input;
+
     return await prisma.profile.update({
         data: rest,
         where: {

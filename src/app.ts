@@ -32,8 +32,14 @@ const fastify = Fastify({
 //TODO: change cors config in Prod
 fastify.register(cors, {
     origin: "*",
-    methods: ["POST"],
+    methods: ["POST", "DELETE", "GET", "PUT"],
 });
+
+//  if (hostname === "localhost") {
+//      //  Request from localhost will pass
+//      cb(null, true);
+//      return;
+//  }
 
 //? dunno
 fastify.get("/", {
