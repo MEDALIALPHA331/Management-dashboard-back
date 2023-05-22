@@ -61,15 +61,15 @@ async function deleteOneCertHandler(
     request: FastifyRequest,
     reply: FastifyReply
 ) {
-    const { CertId } = request.params as { CertId: string };
+    const { certId } = request.params as { certId: string };
 
     try {
-        const deletedCert = await deleteCertById(Number(CertId));
+        const deletedCert = await deleteCertById(Number(certId));
         reply.code(204).send(deletedCert);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
-                reply.code(404).send(`Diploma with id ${CertId} Not Found`);
+                reply.code(404).send(`Diploma with id ${certId} Not Found`);
             }
         }
         reply.code(500).send(e);
@@ -93,16 +93,16 @@ async function updateCertHandler(
     reply: FastifyReply
 ) {
     const body = request.body;
-    const { diplomaId } = request.params as { diplomaId: string };
+    const { certId } = request.params as { certId: string };
 
     try {
-        const updatedCert = await updateCertById(Number(diplomaId), body);
+        const updatedCert = await updateCertById(Number(certId), body);
 
         reply.code(200).send(updatedCert);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
-                reply.code(404).send(`Diploma with id ${diplomaId} Not Found`);
+                reply.code(404).send(`Diploma with id ${certId} Not Found`);
             }
         } else {
             reply.code(500).send(e);
@@ -111,7 +111,6 @@ async function updateCertHandler(
 }
 
 //* services
-
 async function createCert(input: CreateCertInput) {
     return prisma.cert.create({
         data: input,
