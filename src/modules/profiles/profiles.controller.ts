@@ -7,6 +7,7 @@ import {
     deleteProfileById,
     getAllProfiles,
     getProfileById,
+    getProfileByName,
     updateProfileById,
 } from "./profiles.service";
 
@@ -16,6 +17,22 @@ export default async function profileRoutes(server: FastifyInstance) {
     server.post("/", registerProfileHandler);
     server.delete("/:profileId", deleteOneProfileHandler);
     server.put("/:profileId", updateProfileHandler);
+    server.get(
+        "/byname",
+        {
+            schema: {
+                querystring: {
+                    type: "object",
+                    properties: {
+                        firstname: { type: "string" },
+                        lastname: { type: "string" },
+                    },
+                    required: ["firstname", "lastname"],
+                },
+            },
+        },
+        getProfileByNameHandler
+    );
 }
 
 async function registerProfileHandler(
@@ -63,6 +80,31 @@ async function getOneProfileHandler(
             reply.code(404).send(`Profile WITH ID ${profileId} NOT FOUND`);
         }
     } catch (e) {
+        reply.code(500).send(e);
+    }
+}
+
+async function getProfileByNameHandler(
+    request: FastifyRequest<{
+        Querystring: { firstname: string; lastname: string };
+    }>,
+    reply: FastifyReply
+) {
+    const firstname = request.query.firstname;
+    const lastname = request.query.lastname;
+
+    try {
+        const profile = await getProfileByName(firstname, lastname);
+        if (!profile) {
+            reply
+                .code(404)
+                .send(`Profile ${firstname + " " + lastname} Not Found`);
+        }
+        reply.code(200).send(profile);
+    } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+            //TODO
+        }
         reply.code(500).send(e);
     }
 }

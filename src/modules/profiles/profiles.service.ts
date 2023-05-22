@@ -42,6 +42,15 @@ export async function getProfileById(id: number) {
     });
 }
 
+export async function getProfileByName(firstname: string, lastname: string) {
+    return await prisma.profile.findFirst({
+        where: {
+            firstname,
+            lastname,
+        },
+    });
+}
+
 export async function updateProfileById(id: number, input: CreateProfileInput) {
     const { competences, ...rest } = input;
 

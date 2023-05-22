@@ -8,7 +8,7 @@ import prisma from "../utils/prisma";
  * @see This thing should not be in db
  */
 
-//* bootcamp.route: api/bootcamps
+//* language.route: api/languages
 export default async function languageRoutes(server: FastifyInstance) {
     server.get("/", getAllLanguagesHandler);
     server.get("/:langId", getOneLanguageHandler);
@@ -20,7 +20,7 @@ export default async function languageRoutes(server: FastifyInstance) {
 
 /* -------------------------- */
 
-//* bootcamp.controller
+//* language.controller
 async function registerLanguageHandler(
     request: FastifyRequest<{
         Body: createLanguageInput;
@@ -124,7 +124,7 @@ async function updateLanguageHandler(
 }
 
 /* -------------------------- */
-//* bootcamp.service
+//* language.service
 async function createLanguage(input: createLanguageInput) {
     const lang = await prisma.language.create({
         data: input,
@@ -178,7 +178,7 @@ async function updateLanguageById(id: number, input: createLanguageInput) {
 
 /* -------------------------- */
 
-//* bootcamp.schema
+//* language.schema
 const createLanguageSchemas = z.object({
     name: z
         .string({
