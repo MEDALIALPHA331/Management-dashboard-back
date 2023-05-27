@@ -117,7 +117,7 @@ async function deleteOneProfileHandler(
 
     try {
         const deletedProfile = await deleteProfileById(Number(profileId));
-        reply.code(204).send(deletedProfile);
+        reply.code(200).send(deletedProfile);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {

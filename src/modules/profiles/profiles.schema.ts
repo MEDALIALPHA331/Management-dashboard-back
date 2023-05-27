@@ -6,7 +6,7 @@ const createProfileCompetenceSchema = z.object({
     competene: createCompetenceSchema,
 });
 
-export const createProfileSchema = z.object({
+const coreProfileSchema = {
     firstname: z.string().min(4).max(32),
     lastname: z.string().min(4).max(32),
     email: z.string().email(),
@@ -14,6 +14,12 @@ export const createProfileSchema = z.object({
     job_title: z.string(),
     phone_number: z.string().optional().nullable(),
     competences: z.array(createProfileCompetenceSchema).optional().nullable(),
+};
+
+export const createProfileSchema = z.object({ ...coreProfileSchema });
+export const createProfileResponseSchema = z.object({
+    id: z.number(),
+    ...coreProfileSchema,
 });
 
 export type CreateProfileInput = z.infer<typeof createProfileSchema>;

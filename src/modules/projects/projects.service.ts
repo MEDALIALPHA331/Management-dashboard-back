@@ -18,7 +18,8 @@ export async function getAllProfiles() {
     return await prisma.project.findMany({
         include: {
             tools_list: true,
-            profiles: true,
+            references: true,
+            _count: true,
         },
     });
 }

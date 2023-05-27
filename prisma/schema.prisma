@@ -17,17 +17,17 @@ model Profile {
   job_title String @default("N/A")
   years_of_experience Int?
   email String? @unique 
-  phone_number String?
-  competences ProfileCompetence[] 
-  diplomas Diploma[]
+  phone_number String? 
+  competences ProfileCompetence[]
+  diplomas Diploma[] @relation("ProfileToDiploma")
   createdAt DateTime @default(now())  
   updatedAt DateTime @updatedAt
-  jobs TeamMember[]     //* new, possible removal
+  references Reference[] @relation("ProfileToReference")
+  // jobs TeamMember[]     
 
-  certs Cert[]          //? possible removal
-  bootcamps Bootcamp[]  //? possible removal
-  languages Language[]   //? possible removal
-  projects Project[]   //! possible removal: because we have references
+   certs Cert[]          
+   bootcamps Bootcamp[]  @relation("ProfileToBootcamp")
+  //  languages Language[]   
 }
 
 model ProfileCompetence {
@@ -48,13 +48,13 @@ model Competence {
   updatedAt DateTime @updatedAt
 }
 
-model Language {
-  id Int      @id @default(autoincrement())
-  name String
-  profile Profile[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+// model Language {
+//   id Int      @id @default(autoincrement())
+//   name String
+//   profile Profile[]
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 model Tool {
   id Int      @id @default(autoincrement())
@@ -79,7 +79,7 @@ model Diploma {
   name String
   source String?
   graduation_year DateTime?
-  profile Profile[]
+  profile Profile[] @relation("ProfileToDiploma")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -88,8 +88,8 @@ model Bootcamp {
   id Int      @id @default(autoincrement()) 
   name String
   source String?
-  date_obtained DateTime?   //*new
-  profile Profile[] 
+  date_obtained DateTime?   
+  profile Profile[]  @relation("ProfileToBootcamp")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -102,28 +102,15 @@ model Project {
   references Reference[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  profiles Profile[]   //! possible removal, cuz of referece
+  // profiles Profile[] 
 }
 
-
-//*new
-model Task {
-  id Int      @id @default(autoincrement())
-  nom_tache String
-  desc_tache String
-  references Reference[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-//*new
 model Reference {
   id Int      @id @default(autoincrement())
   projectId Int
   project Project @relation(fields: [projectId], references: [id])
-  team TeamMember[]
-  tasks Task[]
+  team Profile[] @relation("ProfileToReference")
+  // tasks Task[]
   client String
   start_date DateTime
   end_date DateTime
@@ -131,13 +118,24 @@ model Reference {
   updatedAt DateTime @updatedAt
 }
 
-model TeamMember {
-  @@id([referenceId, profileId])
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [id])
-  referenceId Int
-  reference Reference  @relation(fields: [referenceId], references: [id])
-  post String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+// model Task {
+//   id Int      @id @default(autoincrement())
+//   nom_tache String
+//   desc_tache String
+//   references Reference[]  
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+
+// model TeamMember {
+//   @@id([referenceId, profileId])
+//   profileId Int
+//   profile Profile @relation(fields: [profileId], references: [id])
+//   referenceId Int
+//   reference Reference  @relation(fields: [referenceId], references: [id])
+//   post String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+

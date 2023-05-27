@@ -77,7 +77,7 @@ async function deleteOneCompetenceHandler(
         const deletedCompetence = await deleteCompetenceById(
             Number(competenceId)
         );
-        reply.code(204).send(deletedCompetence);
+        reply.code(200).send(deletedCompetence);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {

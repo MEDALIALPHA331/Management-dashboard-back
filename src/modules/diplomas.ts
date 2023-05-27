@@ -84,7 +84,7 @@ async function deleteOneDiplomaHandler(
 
     try {
         const deletedDiploma = await deleteDiplomaById(Number(diplomaId));
-        reply.code(204).send(deletedDiploma);
+        reply.code(200).send(deletedDiploma);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {

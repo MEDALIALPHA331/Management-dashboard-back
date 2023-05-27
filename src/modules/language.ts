@@ -78,7 +78,7 @@ async function deleteOneLanguageHandler(
 
     try {
         const deletedLanguage = await deleteLanguageById(Number(langId));
-        reply.code(204).send(deletedLanguage);
+        reply.code(200).send(deletedLanguage);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {

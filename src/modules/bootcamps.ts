@@ -82,7 +82,7 @@ async function deleteOneBootcampHandler(
 
     try {
         const deletedBootcamp = await deleteBootcampById(Number(bootcampId));
-        reply.code(204).send(deletedBootcamp);
+        reply.code(200).send(deletedBootcamp);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {

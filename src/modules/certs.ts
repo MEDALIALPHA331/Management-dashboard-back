@@ -65,7 +65,7 @@ async function deleteOneCertHandler(
 
     try {
         const deletedCert = await deleteCertById(Number(certId));
-        reply.code(204).send(deletedCert);
+        reply.code(200).send(deletedCert);
     } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code === "P2025") {
