@@ -140,7 +140,9 @@ async function createDiploma(input: createDiplomaInput) {
 }
 
 async function getAllDiplomas() {
-    const diplomas = await prisma.diploma.findMany();
+    const diplomas = await prisma.diploma.findMany({
+        take: 100,
+    });
 
     return diplomas;
 }

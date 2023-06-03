@@ -118,7 +118,9 @@ async function createCert(input: CreateCertInput) {
 }
 
 async function getCerts() {
-    return await prisma.cert.findMany();
+    return await prisma.cert.findMany({
+        take: 100,
+    });
 }
 
 async function getCertById(id: number) {

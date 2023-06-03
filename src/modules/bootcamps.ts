@@ -143,7 +143,9 @@ async function createBootcamp(input: createBootcampInput) {
 }
 
 async function getAllBootcamps() {
-    const bootcamps = await prisma.bootcamp.findMany();
+    const bootcamps = await prisma.bootcamp.findMany({
+        take: 100,
+    });
 
     return bootcamps;
 }

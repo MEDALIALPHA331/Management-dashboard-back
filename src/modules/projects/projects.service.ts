@@ -16,6 +16,7 @@ export async function createProfile(input: CreateProjectInput) {
 
 export async function getAllProfiles() {
     return await prisma.project.findMany({
+        take: 100,
         include: {
             tools_list: true,
             references: true,

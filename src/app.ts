@@ -2,8 +2,8 @@ import cors from "@fastify/cors";
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 
 import puppeteer from "puppeteer";
-import { getTemplateOne } from "./pdf/templates";
-import { Profile } from "./types";
+import { getTemplateOne, getTemplateTwo } from "./pdf/templates";
+import { NewProfile, Profile } from "./types";
 
 import bootcampRoutes from "./modules/bootcamps";
 import certRoutes from "./modules/certs";
@@ -70,6 +70,33 @@ fastify.post("/generate_cv", {
 
         // Generate the HTML for the resume based on the request body
         await page.setContent(getTemplateOne(profile));
+
+        // Generate the PDF using Puppeteer and send it back as a response
+        const pdf = await page.pdf({
+            format: "A4",
+            printBackground: true,
+            // margin: { top: "1cm", right: "1cm", bottom: "1cm", left: "1cm" },
+        });
+
+        await browser.close();
+
+        return reply
+            .code(200)
+            .header("Content-Type", "application/pdf")
+            .header("Content-Length", pdf.length)
+            .send(pdf);
+    },
+});
+
+//? cv generation endpoint
+fastify.post("/generatecv", {
+    handler: async (request: FastifyRequest, reply: FastifyReply) => {
+        const profile = request.body as NewProfile;
+
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        await page.setContent(getTemplateTwo(profile));
 
         // Generate the PDF using Puppeteer and send it back as a response
         const pdf = await page.pdf({

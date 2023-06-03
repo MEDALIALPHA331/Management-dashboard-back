@@ -2,14 +2,15 @@ import prisma from "../../utils/prisma";
 import { createReferenceInput } from "./references.schema";
 
 export async function createReference(input: createReferenceInput) {
-    const { client, start_date, end_date, project, team } = input;
+    const { client, start_date, end_date, projectId, teamIds } = input;
 
     const connectedProject = await prisma.project.findUnique({
-        where: { id: project.id },
+        where: { id: projectId },
     });
 
     const connectedProfiles = await prisma.profile.findMany({
-        where: { id: { in: team.map((profile) => profile.id) } },
+        take: 100,
+        where: { id: { in: teamIds } },
     });
 
     const reference = await prisma.reference.create({
@@ -18,6 +19,7 @@ export async function createReference(input: createReferenceInput) {
             start_date: start_date,
             end_date: end_date,
             projectId: connectedProject?.id!, //? potential null
+
             team: {
                 connect: connectedProfiles.map((profile) => ({
                     id: profile.id,
@@ -65,7 +67,7 @@ export async function getProfileByName(firstname: string, lastname: string) {
 
 */
 
-//! untested
+/*
 export async function updateRefById(id: number, input: createReferenceInput) {
     const { client, start_date, end_date, project, team } = input;
 
@@ -94,6 +96,7 @@ export async function updateRefById(id: number, input: createReferenceInput) {
         },
     });
 }
+*/
 
 export async function deleteRefById(id: number) {
     return await prisma.reference.delete({

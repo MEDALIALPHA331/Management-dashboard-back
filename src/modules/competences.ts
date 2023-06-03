@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { buildJsonSchemas } from "fastify-zod";
-import { z } from "zod";
+import { number, z } from "zod";
 import prisma from "../utils/prisma";
 
 //* competences.route: api/diplomas
@@ -137,10 +137,6 @@ async function createCompetence(input: createCompetenceInput) {
     //TODO: use the tools list, connect or create
     const competence = await prisma.competence.create({
         data: rest,
-        include: {
-            profile: true,
-            tools_list: true,
-        },
     });
 
     return competence;
@@ -200,6 +196,20 @@ async function deleteAllCompetences() {
 //* competences.schema
 
 export const createCompetenceSchema = z.object({
+    name: z.string({
+        required_error: "libellé de compétence est obligatoire",
+        invalid_type_error: "libellé est de type chaine de charactére",
+    }),
+
+    //TODO: replace it by createToolSchema
+    tools_list: z
+        .array(z.object({ name: z.string() }))
+        .optional()
+        .nullable(),
+});
+
+export const createCompetenceSchemaResponse = z.object({
+    id: number(),
     name: z.string({
         required_error: "libellé de compétence est obligatoire",
         invalid_type_error: "libellé est de type chaine de charactére",

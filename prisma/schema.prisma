@@ -18,43 +18,34 @@ model Profile {
   years_of_experience Int?
   email String? @unique 
   phone_number String? 
+  about String?
   competences ProfileCompetence[]
   diplomas Diploma[] @relation("ProfileToDiploma")
   createdAt DateTime @default(now())  
   updatedAt DateTime @updatedAt
   references Reference[] @relation("ProfileToReference")
   // jobs TeamMember[]     
-
-   certs Cert[]          
-   bootcamps Bootcamp[]  @relation("ProfileToBootcamp")
-  //  languages Language[]   
+  //  certs Cert[]          
+  //  bootcamps Bootcamp[]  @relation("ProfileToBootcamp")
 }
 
-model ProfileCompetence {
-  level Int 
-  competenceId Int
-  comptence Competence @relation(fields: [competenceId], references: [id])
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [id])
-  @@id([competenceId, profileId])
-}
+ model ProfileCompetence {
+   id Int      @id @default(autoincrement())
+   level Int 
+   competenceId Int
+   competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
+   profileId Int
+   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+ }
 
 model Competence {
   id Int      @id @default(autoincrement())
   name String
   tools_list Tool[]
-  profile ProfileCompetence[]
+  profile ProfileCompetence[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-// model Language {
-//   id Int      @id @default(autoincrement())
-//   name String
-//   profile Profile[]
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
 
 model Tool {
   id Int      @id @default(autoincrement())
@@ -69,7 +60,7 @@ model Cert {
   id Int      @id @default(autoincrement())
   name String
   completion_year DateTime?
-  profile Profile[] 
+  // profile Profile[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -89,7 +80,7 @@ model Bootcamp {
   name String
   source String?
   date_obtained DateTime?   
-  profile Profile[]  @relation("ProfileToBootcamp")
+  // profile Profile[]  @relation("ProfileToBootcamp")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -102,7 +93,6 @@ model Project {
   references Reference[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // profiles Profile[] 
 }
 
 model Reference {

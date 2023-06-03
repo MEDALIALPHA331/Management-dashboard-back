@@ -20,8 +20,8 @@ export const createReferenceSchema = z.object({
     client: z.string(),
     end_date: z.date(),
     start_date: z.date(),
-    project: createProjectResponseSchema,
-    team: z.array(createProfileResponseSchema),
+    projectId: z.number(),
+    teamIds: z.array(z.number()),
 });
 
 export const createReferenceResponseSchema = z.object({
